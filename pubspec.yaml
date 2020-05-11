@@ -27,6 +27,7 @@ dependencies:
   provider: ^4.0.4
   chopper: ^3.0.2
   json_annotation: ^3.0.1
+  flutter_advanced_networkimage: ^0.7.0
 
 dev_dependencies:
   flutter_test:

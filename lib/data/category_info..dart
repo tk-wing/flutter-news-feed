@@ -3,10 +3,10 @@ class Category {
   final String nameEn;
   final String nameJp;
 
-  Category({this.id, this.nameEn, this.nameJp});
+  const Category({this.id, this.nameEn, this.nameJp});
 }
 
-final List<Category> categories = [
+List<Category> categories = [
   Category(id: 0, nameEn: 'general', nameJp: '総合'),
   Category(id: 1, nameEn: 'business', nameJp: 'ビジネス'),
   Category(id: 2, nameEn: 'technology', nameJp: 'テクノロジー'),

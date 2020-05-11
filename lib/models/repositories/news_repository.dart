@@ -32,7 +32,6 @@ class NewsRepository {
 
       if (response.isSuccessful) {
         final responseBody = response.body;
-        print("responseBody: ${responseBody}");
         result = News.fromJson(responseBody).articles;
       } else {
         final errorCode = response.statusCode;
