@@ -10,6 +10,7 @@ import 'package:flutter_news_feed/viewmodels/news_list_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class NewsListPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<NewsListViewModel>(context, listen: false);

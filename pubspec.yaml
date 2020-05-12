@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -24,18 +24,39 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   flutter_launcher_icons: ^0.7.5
+
+  # Provider
   provider: ^4.0.4
+
+  # Chopper
   chopper: ^3.0.2
   json_annotation: ^3.0.1
+
+  # Image from internet
   flutter_advanced_networkimage: ^0.7.0
+
+  # Web View
   webview_flutter: ^0.3.21
+
+  # Moor
+  moor: ^3.0.2
+  moor_ffi: ^0.5.0
+  path_provider:
+  path:
+
+  auto_size_text: ^2.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^1.9.0
+
+  # Chopper
   chopper_generator: ^3.0.4
   json_serializable: ^3.3.0
+
+  # Moor
+  moor_generator: ^3.0.0
 
 flutter_icons:
   android: true
