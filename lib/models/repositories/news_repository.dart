@@ -1,15 +1,15 @@
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news_feed/data/category_info..dart';
+import 'package:flutter_news_feed/data/load_status.dart';
 import 'package:flutter_news_feed/data/search_type.dart';
-import 'package:flutter_news_feed/main.dart';
 import 'package:flutter_news_feed/models/database/dao.dart';
 import 'package:flutter_news_feed/models/database/database.dart';
 import 'package:flutter_news_feed/models/model/news_model.dart';
 import 'package:flutter_news_feed/models/networking/api_service.dart';
 import 'package:provider/provider.dart';
 
-class NewsRepository {
+class NewsRepository extends ChangeNotifier {
   final ApiService _apiService;
   final NewsDao _dao;
 
@@ -17,14 +17,21 @@ class NewsRepository {
       : _apiService = apiService,
         _dao = dao;
 
-  Future<List<Article>> getNews({
+  List<Article> _articles = List();
+  List<Article> get articles => _articles;
+
+  LoadStatus _loadStatus = LoadStatus.DONE;
+  LoadStatus get loadStatus => _loadStatus;
+
+  Future<void> getNews({
     @required SearchType searchType,
     String keyword,
     Category category,
   }) async {
-    List<Article> result;
-    Response response;
+    _loadStatus = LoadStatus.LOADING;
+    notifyListeners();
 
+    Response response;
     try {
       switch (searchType) {
         case SearchType.HEAD_LINE:
@@ -41,31 +48,37 @@ class NewsRepository {
 
       if (response.isSuccessful) {
         final responseBody = response.body;
-        result = await _store(responseBody);
+        await _store(responseBody);
+        _loadStatus = LoadStatus.DONE;
       } else {
         final errorCode = response.statusCode;
         final error = response.error;
+        _loadStatus = LoadStatus.RESPONSE_ERROR;
         print("Request is not successful: ${errorCode} / ${error}");
       }
     } on Exception catch (error) {
+      _loadStatus = LoadStatus.NETWORK_ERROR;
       print("error: ${error}");
+    } finally {
+      notifyListeners();
     }
-
-    return result;
   }
 
+  @override
   void dispose() {
     _apiService.dispose();
+    super.dispose();
   }
 
-  Future<List<Article>> _store(responseBody) async {
-    final articles = News.fromJson(responseBody).articles;
+  Future _store(responseBody) async {
+    final articlesFromNetwork = News.fromJson(responseBody).articles;
 
     //webから取得した記事リストをDBをのテーブルクラスに変換してDB登録・取得
-    final articleRecords = await _dao.replace(_toArticleRecord(articles));
+    final articlesFromDB =
+        await _dao.replace(_toArticleRecord(articlesFromNetwork));
 
-    //DBから取得したデータをモデルクラスに再変換して返す
-    return _toArticle(articleRecords);
+    //DBから取得したデータをモデルクラスに再変換
+    _articles = _toArticle(articlesFromDB);
   }
 
   List<ArticleRecord> _toArticleRecord(List<Article> articles) {

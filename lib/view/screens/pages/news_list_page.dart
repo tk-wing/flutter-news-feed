@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_feed/data/category_info..dart';
+import 'package:flutter_news_feed/data/load_status.dart';
 import 'package:flutter_news_feed/data/search_type.dart';
 import 'package:flutter_news_feed/models/model/news_model.dart';
 import 'package:flutter_news_feed/view/components/article_tile.dart';
@@ -14,8 +15,7 @@ class NewsListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<NewsListViewModel>(context, listen: false);
-
-    if (!viewModel.isLoading && viewModel.article.isEmpty) {
+    if (viewModel.loadStatus != LoadStatus.LOADING && viewModel.article.isEmpty) {
       Future(() => viewModel.getNews(
           searchType: SearchType.CATEGORY, category: categories[0]));
     }
@@ -31,12 +31,12 @@ class NewsListPage extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              //TODO 検索ワード
+              //検索ワード
               SearchBar(
                 onSearch: (keyword) => getKeywordNews(context, keyword),
               ),
-              //TODO カテゴリー選択
-              //TODO 記事表示
+              //カテゴリー選択
+              //記事表示
               CategoryChips(
                 onCategorySelected: (category) =>
                     getCategoryNews(context, category),
@@ -44,7 +44,7 @@ class NewsListPage extends StatelessWidget {
               Expanded(
                 child: Consumer<NewsListViewModel>(
                   builder: (context, model, child) {
-                    if (model.isLoading) {
+                    if (model.loadStatus == LoadStatus.LOADING) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
@@ -94,7 +94,6 @@ class NewsListPage extends StatelessWidget {
       searchType: SearchType.CATEGORY,
       category: category,
     );
-    print("This is getCategoryNews:${category.nameJp}");
   }
 
   _openArticleWebPage(Article article, BuildContext context) {
