@@ -6,7 +6,9 @@ import 'package:flutter_news_feed/models/repositories/news_repository.dart';
 import 'package:provider/provider.dart';
 
 class NewsListViewModel extends ChangeNotifier {
-  final NewsRepository _newsRepository = NewsRepository();
+  final NewsRepository _newsRepository;
+
+  NewsListViewModel({newsRepository}) : _newsRepository = newsRepository;
 
   SearchType _searchType = SearchType.CATEGORY;
   SearchType get searchType => _searchType;
@@ -27,7 +29,7 @@ class NewsListViewModel extends ChangeNotifier {
     @required SearchType searchType,
     String keyword,
     Category category,
-  }) async{
+  }) async {
     _searchType = searchType;
     _keyword = keyword;
     _category = category;
@@ -45,8 +47,8 @@ class NewsListViewModel extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
-
   }
+
   @override
   void dispose() {
     _newsRepository.dispose();

@@ -1,25 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news_feed/models/database/database.dart';
+import 'package:flutter_news_feed/Provider/providers.dart';
 import 'package:flutter_news_feed/view/screens/home_screen.dart';
 import 'package:flutter_news_feed/view/style/style.dart';
-import 'package:flutter_news_feed/viewmodels/head_line_viewmodel.dart';
-import 'package:flutter_news_feed/viewmodels/news_list_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-MyDataBase myDataBase;
 
 void main() {
-  myDataBase = MyDataBase();
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider<NewsListViewModel>(
-          create: (_) => NewsListViewModel(),
-        ),
-        ChangeNotifierProvider<HeadLineViewModel>(
-          create: (_) => HeadLineViewModel(),
-        ),
-      ],
+      providers: globalProviders,
       child: MyApp(),
     ),
   );

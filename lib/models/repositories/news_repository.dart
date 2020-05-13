@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_feed/data/category_info..dart';
 import 'package:flutter_news_feed/data/search_type.dart';
 import 'package:flutter_news_feed/main.dart';
+import 'package:flutter_news_feed/models/database/dao.dart';
 import 'package:flutter_news_feed/models/database/database.dart';
 import 'package:flutter_news_feed/models/model/news_model.dart';
 import 'package:flutter_news_feed/models/networking/api_service.dart';
 import 'package:provider/provider.dart';
 
 class NewsRepository {
-  final ApiService _apiService = ApiService.create();
+  final ApiService _apiService;
+  final NewsDao _dao;
+
+  NewsRepository({dao, apiService})
+      : _apiService = apiService,
+        _dao = dao;
 
   Future<List<Article>> getNews({
     @required SearchType searchType,
@@ -35,8 +41,6 @@ class NewsRepository {
 
       if (response.isSuccessful) {
         final responseBody = response.body;
-        // myDataBase.newsDao.replace(articles)
-        // result = News.fromJson(responseBody).articles;
         result = await _store(responseBody);
       } else {
         final errorCode = response.statusCode;
@@ -55,11 +59,10 @@ class NewsRepository {
   }
 
   Future<List<Article>> _store(responseBody) async {
-    final dao = myDataBase.newsDao;
     final articles = News.fromJson(responseBody).articles;
 
     //webから取得した記事リストをDBをのテーブルクラスに変換してDB登録・取得
-    final articleRecords = await dao.replace(_toArticleRecord(articles));
+    final articleRecords = await _dao.replace(_toArticleRecord(articles));
 
     //DBから取得したデータをモデルクラスに再変換して返す
     return _toArticle(articleRecords);
