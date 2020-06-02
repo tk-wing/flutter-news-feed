@@ -14,8 +14,8 @@ class _AboutUsPageState extends State<AboutUsPage> {
       child: Scaffold(
         body: Center(
             child: AnimatedContainer(
-          width: _selected ? 300 : 50,
-          height: _selected ? 200 : 25,
+          width: _selected ? 300 : 0,
+          height: _selected ? 200 : 0,
           child: AutoSizeText(
             'News Feed App',
             style: TextStyle(fontSize: 40.0),
